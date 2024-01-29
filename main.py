@@ -1,5 +1,7 @@
 from Cyclindre import Cylindre
 from LireMap import lireMap
+import numpy as np
+
 a = 6.98*10**(-2)
 v0 = 1 
 b0 = 100
