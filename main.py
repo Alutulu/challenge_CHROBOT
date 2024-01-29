@@ -3,7 +3,7 @@ from LireMap import lireMap
 
 def main():
     cylindres = []
-    x, y, t = lireMap("donnees-map.txt", afficherMap=False)
+    x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt", afficherMap=False)
     for i in range(len(x)):
         cylindres.append(Cylindre(x[i], y[i], t[i]))
     for cylindre in cylindres:
