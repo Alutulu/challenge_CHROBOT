@@ -21,7 +21,7 @@ def lireMap(filename = None, afficherMap = True):
     else:
         nom_fichier = filename
     #lecture du fichier
-    DataMap = np.loadtxt(nom_fichier, skiprows=1, dtype=float)
+    DataMap = np.loadtxt(nom_fichier, skiprows=0, dtype=float)
     #affichage des donnees de la carte
     x=DataMap[:,0]
     y=DataMap[:,1]

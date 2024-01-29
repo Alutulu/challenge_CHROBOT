@@ -1,7 +1,7 @@
 import math
 
 class Cylindre:
-  last_id = 0
+  last_id = -1
   def __init__(self, x, y, type, rayon = 1):
     self.id = Cylindre.last_id + 1
     Cylindre.last_id += 1
@@ -44,6 +44,11 @@ class Cylindre:
   
   def updateConnections(self, listCylindres):
     for i in range(len(listCylindres)):
-      if listCylindres[i] != self.id:
-        if not self.willCollide(listCylindres[i]):
+      if i != self.id:
+        flag = True
+        for j in range(len(listCylindres)):
+          if j != i and j != self.id:
+            if self.willCollide(listCylindres[i], listCylindres[j]):
+              flag = False
+        if flag:
           self.connections.append(i)
