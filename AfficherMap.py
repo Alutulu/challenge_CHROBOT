@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-def afficherMap(listCylindres, chemin=None, styleVirgile = False):
+def afficherMap(listCylindres, chemin=None, afficherTousLesIndices=False, styleVirgile=False):
+    # le chemin doit être une liste des indices de cylindre (int)
     tColorTab = {1:'y', 2:'c', 3:'m'}
     dbRayon = 1
 
@@ -11,13 +12,21 @@ def afficherMap(listCylindres, chemin=None, styleVirgile = False):
     ax = fig.gca()
     ax.set_aspect('equal', adjustable='box')
     for cylindre in listCylindres:
+        if chemin != None:
+           if cylindre.id in chemin:
+              numero = chemin.index(cylindre.id)
+              c2 = plt.Circle((cylindre.x+1,cylindre.y+1), 0.4,color='w', zorder=4.0)
+              plt.text(cylindre.x+1, cylindre.y+1, chr(ord('A') + numero), fontsize='medium', zorder=5.0, color='r')
+              ax.add_patch(c2)
         c1 = plt.Circle((cylindre.x,cylindre.y), dbRayon,color=tColorTab[int(cylindre.type)] )
         plt.text(cylindre.x-0.55, cylindre.y+0.2, str(cylindre.masse) + "kg", fontsize='medium')
         plt.text(cylindre.x-0.4, cylindre.y-0.6, str(cylindre.gain) + "€", fontsize='medium')
-        c2 = plt.Circle((cylindre.x+1,cylindre.y-1), 0.4,color='w', zorder=4.0)
-        plt.text(cylindre.x+1, cylindre.y-1, str(cylindre.id), fontsize='medium', zorder=5.0, color='r')
         ax.add_patch(c1)
-        ax.add_patch(c2)
+        # affiche l'indice de tous les cylindres
+        if afficherTousLesIndices:
+          c3 = plt.Circle((cylindre.x+1,cylindre.y-1), 0.4,color='w', zorder=4.0)
+          plt.text(cylindre.x+1, cylindre.y-1, str(cylindre.id), fontsize='medium', zorder=5.0, color='b')
+          ax.add_patch(c3)
 
     colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
     for i in range(len(listCylindres)):
