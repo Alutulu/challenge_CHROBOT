@@ -9,6 +9,7 @@ class Cylindre:
     self.y = y
     self.rayon = rayon
     self.type = None
+    self.isActive = True
     self.connections = []
     self.type = int(type)
     if self.type == 1:
