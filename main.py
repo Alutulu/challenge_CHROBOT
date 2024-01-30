@@ -56,7 +56,7 @@ def calculeScore(posini, chemin):
 
 def main():
     cylindres = []
-    x, y, t = lireMap("donnees-map.txt")
+    x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
     for i in range(len(x)):
         cylindres.append(Cylindre(x[i], y[i], t[i]))
     # for cylindre in cylindres:
