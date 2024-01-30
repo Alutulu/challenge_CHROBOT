@@ -2,6 +2,7 @@ from Cyclindre import Cylindre
 from LireMap import lireMap
 import numpy as np
 from AfficherMap import afficherMap
+from Planifie import planifie
 
 a = 6.98*10**(-2)
 v0 = 1 
@@ -32,26 +33,26 @@ def calculeScore(posini, chemin):
     v = v0
     carburant = qmax 
     temps = 0
-    n_sommets = 0
+    n_cylindres = 0
 
     if(list(set(chemin)) != chemin):
         print("Attention ! Le chemin comporte des doublons")
         exit()
 
-    for sommet in chemin:
-        dist = distance(pos, sommet)
+    for cylindre in chemin:
+        dist = distance(pos, cylindre)
         carburant -= (b*masse + b0)*dist
         temps += dist/vitesse(masse)
         if(carburant < 0 or temps > tmax):
             print(f"Carburant restant : {carburant}, temps restant : {tmax-temps} secondes")
-            print(f"Argent récolté : {argent}, Nombre de cylindres explorés : {n_sommets}")
+            print(f"Argent récolté : {argent}, Nombre de cylindres explorés : {n_cylindres}")
             return argent 
         else:
-            n_sommets += 1
-            argent += sommet.gain
-            masse += sommet.masse
-            pos = sommet
-    print(f"Tous les sommets ont été parcourus, carburant restant : {carburant}, temps restant : {tmax-temps} secondes")
+            n_cylindres += 1
+            argent += cylindre.gain
+            masse += cylindre.masse
+            pos = cylindre
+    print(f"Tous les cylindres ont été parcourus, carburant restant : {carburant}, temps restant : {tmax-temps} secondes")
     return argent
 
 def main():
@@ -64,6 +65,12 @@ def main():
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
     afficherMap(cylindres, styleVirgile=False)
+    n_cylindres = [2, 9, 5, 4, 3, 0]
+    chemin = [cylindres[i] for i in n_cylindres] 
+    posIni = Cylindre(0, 0, 1)
+    dirIni = np.array([0, 1])
+    res = planifie(chemin, posIni, dirIni)
+    print(res)
 
 if __name__ == "__main__":
     main()
