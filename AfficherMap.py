@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import math
 
 def afficherMap(listCylindres, styleVirgile = False):
-    tColorTab = {1:'green', 2:'blue', 3:'red'}
+    tColorTab = {1:'y', 2:'c', 3:'m'}
     dbRayon = 1
 
     fig = plt.figure(1)
