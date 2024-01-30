@@ -6,10 +6,6 @@ def afficherMap(listCylindres, styleVirgile = False):
     tColorTab = {1:'green', 2:'blue', 3:'red'}
     dbRayon = 1
 
-    # x = [cylindre.x for cylindre in listCylindres]
-    # y = [cylindre.y for cylindre in listCylindres]
-    # t = [cylindre.type for cylindre in listCylindres]
-
     fig = plt.figure(1)
     fig.set_figheight(7)
     ax = fig.gca()
