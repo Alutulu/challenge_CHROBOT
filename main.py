@@ -1,6 +1,7 @@
 from Cyclindre import Cylindre
 from LireMap import lireMap
 import numpy as np
+from AfficherMap import afficherMap
 
 a = 6.98*10**(-2)
 v0 = 1 
@@ -55,15 +56,14 @@ def calculeScore(posini, chemin):
 
 def main():
     cylindres = []
-    x, y, t = lireMap("donnees-map.txt", afficherMap=False)
+    x, y, t = lireMap("donnees-map.txt")
     for i in range(len(x)):
         cylindres.append(Cylindre(x[i], y[i], t[i]))
-    for cylindre in cylindres:
-        print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
+    # for cylindre in cylindres:
+    #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
-    print(cylindres[14].connections)
+    afficherMap(cylindres, styleVirgile=False)
 
 if __name__ == "__main__":
     main()
-
