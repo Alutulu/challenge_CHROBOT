@@ -2,12 +2,16 @@ from Cyclindre import Cylindre
 from numpy.linalg import norm
 from numpy import sqrt, cos, sin, arctan2, array, degrees, cross, dot
 
-def planifie(chemin, posIni, dirIni, printTxt = True):
-    #Planifie les déplacements du robot en fonction du chemin
+def planifie(chemin, posIni, dirIni, printTxt = False):
+    """Planifie le chemin du robot
+       :param list chemin: Chemin (liste de Cylindres)
+       :param Cylindre posIni: Position initiale du robot
+       :param Array dirIni: Direction initiale du robot
+       :param boolean printTxt: True si tu veux sauvegarder en txt
+       """
     primitives = []
     direction = array(dirIni)
     position = posIni
-    zero = Cylindre(0, 0, 1)
 
     for etape in chemin:
         vec = array([etape.x-position.x, etape.y-position.y]) 
