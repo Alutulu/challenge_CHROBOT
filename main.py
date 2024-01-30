@@ -2,6 +2,7 @@ from Cyclindre import Cylindre
 from LireMap import lireMap
 import numpy as np
 from AfficherMap import afficherMap
+from GenererMap import genererRandomCylindres
 
 a = 6.98*10**(-2)
 v0 = 1 
@@ -59,8 +60,8 @@ def main():
     x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
     for i in range(len(x)):
         cylindres.append(Cylindre(x[i], y[i], t[i]))
-    # for cylindre in cylindres:
-    #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
+    # Pour générer une map aléatoire :
+    # cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
     afficherMap(cylindres, styleVirgile=False)

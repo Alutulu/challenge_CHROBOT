@@ -53,3 +53,6 @@ class Cylindre:
               flag = False
         if flag:
           self.connections.append(i)
+
+  def distance(self, cylindre):
+    return math.sqrt((cylindre.x - self.x)**2 + (cylindre.y - self.y)**2)
