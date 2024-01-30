@@ -6,18 +6,18 @@ def afficherMap(listCylindres, styleVirgile = False):
     tColorTab = {1:'green', 2:'blue', 3:'red'}
     dbRayon = 1
 
-    x = [cylindre.x for cylindre in listCylindres]
-    y = [cylindre.y for cylindre in listCylindres]
-    t = [cylindre.type for cylindre in listCylindres]
+    # x = [cylindre.x for cylindre in listCylindres]
+    # y = [cylindre.y for cylindre in listCylindres]
+    # t = [cylindre.type for cylindre in listCylindres]
 
-    n = len(x)
     fig = plt.figure(1)
+    fig.set_figheight(7)
     ax = fig.gca()
     ax.set_aspect('equal', adjustable='box')
-    for i in range(n):
-        plt.plot(x[i],y[i],marker='+',color=tColorTab[int(t[i])])
-        c1 = plt.Circle((x[i],y[i]), dbRayon,color=tColorTab[int(t[i])] )
-        plt.text(x[i], y[i], "5")
+    for cylindre in listCylindres:
+        c1 = plt.Circle((cylindre.x,cylindre.y), dbRayon,color=tColorTab[int(cylindre.type)] )
+        plt.text(cylindre.x-0.55, cylindre.y+0.2, str(cylindre.masse) + "kg", fontsize='medium')
+        plt.text(cylindre.x-0.4, cylindre.y-0.6, str(cylindre.gain) + "€", fontsize='medium')
         ax.add_patch(c1)
 
     colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
