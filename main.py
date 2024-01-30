@@ -67,7 +67,7 @@ def main():
     # cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
-    afficherMap(cylindres, styleVirgile=False)
+    #afficherMap(cylindres, chemin=, styleVirgile=False)
 
 if __name__ == "__main__":
     main()

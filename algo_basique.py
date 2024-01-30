@@ -2,10 +2,12 @@ import math
 from main import *
 from LireMap import lireMap
 from Cyclindre import *
+from AfficherMap import afficherMap
 collecte = 0
 temps = 300
 solution = False
 chemin = []
+sommep = 0
 
 class Roomba:
   def __init__(self, x, y, rayon = 1, carburant = 10000, vitesse = 1, masse = 1):
@@ -19,6 +21,7 @@ class Roomba:
 def collecter(cylindre, roomba):
   global collecte
   global temps
+  global sommep
   print("appel collecter()")
   roomba.masse += cylindre.masse #Ajout masse
   roomba.carburant -= (100+3*roomba.masse)*distance(cylindre, roomba) #Penalité carburant, j'ai pas la formule donc purement arbitraire 
@@ -49,14 +52,18 @@ def algo(roombatest, cylindres, temps):
             mincout = math.inf
             for id_cylindre in cible.connections:
                 if cylindres[id_cylindre].isActive:
-                    tempcout = distance(roombatest, cylindres[id_cylindre])-cylindres[id_cylindre].gain #Test completement naif
+                    if(roombatest.carburant > 0.1*10000):   
+                        tempcout = distance(roombatest, cylindres[id_cylindre])-cylindres[id_cylindre].gain*2 #Condition de choix... à améliorer 
                     if tempcout<mincout:
                         mincout = tempcout
                         cible = cylindres[id_cylindre]
                         solution = True
             if(solution):
-                collecter(cible, roombatest)
-                chemin.append(cible.id)
+                if(roombatest.carburant - (100+3*roombatest.masse)*distance(cible, roombatest) > 0):
+                    collecter(cible, roombatest)
+                    chemin.append(cible.id)
+                else:
+                    break
                 solution = False
             else:
                 print("plus de solutions!")
@@ -69,6 +76,8 @@ def algo(roombatest, cylindres, temps):
     return chemin   
        
 def main_algo():
+    global collecte
+    sommep = 0
     roombatest = Roomba(0, 0)
     cylindres = []
     try:
@@ -81,10 +90,13 @@ def main_algo():
     #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
+        sommep+=cylindres[i].gain
     temps = 300
     collecte = 0
-    algo(roombatest, cylindres, temps)
+    chemin = algo(roombatest, cylindres, temps)
+    print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
     collecte = 0
+    afficherMap(cylindres, chemin)
 
 if __name__ == "__main__":
     main_algo()
