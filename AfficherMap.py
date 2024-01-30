@@ -32,5 +32,7 @@ def afficherMap(listCylindres, styleVirgile = False):
               plt.plot((new_x1, new_x2), (new_y1, new_y2), color=color, linestyle='-', linewidth=1.0)
             else:
               plt.plot((new_x1, new_x2), (new_y1, new_y2), color='k', linestyle='--', linewidth=1.0)
+            middle = (x1 + vector[0] / 2, y1 + vector[1] / 2)
+            plt.text(middle[0]-0.5, middle[1]-0.2, str(round(norm, 1)), fontsize='small', zorder=3.0)
 
     plt.show()
