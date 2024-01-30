@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-def afficherMap(listCylindres, styleVirgile = False):
-    tColorTab = {1:'green', 2:'blue', 3:'red'}
+def afficherMap(listCylindres, chemin=None, styleVirgile = False):
+    tColorTab = {1:'y', 2:'c', 3:'m'}
     dbRayon = 1
 
     fig = plt.figure(1)
@@ -14,7 +14,10 @@ def afficherMap(listCylindres, styleVirgile = False):
         c1 = plt.Circle((cylindre.x,cylindre.y), dbRayon,color=tColorTab[int(cylindre.type)] )
         plt.text(cylindre.x-0.55, cylindre.y+0.2, str(cylindre.masse) + "kg", fontsize='medium')
         plt.text(cylindre.x-0.4, cylindre.y-0.6, str(cylindre.gain) + "€", fontsize='medium')
+        c2 = plt.Circle((cylindre.x+1,cylindre.y-1), 0.4,color='w', zorder=4.0)
+        plt.text(cylindre.x+1, cylindre.y-1, str(cylindre.id), fontsize='medium', zorder=5.0, color='r')
         ax.add_patch(c1)
+        ax.add_patch(c2)
 
     colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
     for i in range(len(listCylindres)):
