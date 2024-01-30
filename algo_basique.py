@@ -3,6 +3,8 @@ from main import *
 from LireMap import lireMap
 from Cyclindre import *
 from AfficherMap import afficherMap
+from GenererMap import genererRandomCylindres
+
 collecte = 0
 temps = 300
 solution = False
@@ -33,6 +35,11 @@ def collecter(cylindre, roomba):
   print("nouvelle masse = ", roomba.masse," nouveau carburant = ", roomba.carburant," nouveau gain = ", collecte," temps restant = ", temps, "nouvelle vitesse = ", roomba.vitesse, "nouvelle position roomba : ",roomba.x, roomba.y)
   cylindre.isActive = False
 
+def va(cylindre):
+    sommeliens = 0
+    for cylindresuiv in cylindre.connections:
+        sommeliens += cylindresuiv.gain
+    return sommeliens
 
 def algo(roombatest, cylindres, temps):
     while(temps>0 and roombatest.carburant>0): #Tant qu'il reste du temps et du carburant
@@ -40,7 +47,7 @@ def algo(roombatest, cylindres, temps):
             print("debug : collecte = 0")
             mindist = math.inf 
             for cylindre in cylindres: #Pour tous les cylindres de la map
-                tempdist = distance(cylindre, roombatest) #calculer distance avec cylindre considéré
+                tempdist = distance(cylindre, roombatest) - cylindre.gain*200 #calculer distance avec cylindre considéré
                 print(tempdist)
                 if tempdist < mindist:
                     print("maj mindist")
@@ -52,8 +59,14 @@ def algo(roombatest, cylindres, temps):
             mincout = math.inf
             for id_cylindre in cible.connections:
                 if cylindres[id_cylindre].isActive:
-                    if(roombatest.carburant > 0.1*10000):   
-                        tempcout = distance(roombatest, cylindres[id_cylindre])-cylindres[id_cylindre].gain*2 #Condition de choix... à améliorer 
+                    #tempsommeliens = -999
+                    #sommeliens = va(cylindres[id_cylindre])
+                    #if(sommeliens > tempsommeliens):
+                        #tempsommeliens = sommeliens
+                    if(roombatest.carburant > 1000):                                      
+                        tempcout = distance(roombatest, cylindres[id_cylindre])/roombatest.vitesse+(100+3*roombatest.masse)*distance(roombatest, cylindres[id_cylindre])-cylindres[id_cylindre].gain*300 #Condition de choix... à améliorer 
+                    else:
+                        tempcout = (100+3*roombatest.masse)*distance(roombatest, cylindres[id_cylindre])  
                     if tempcout<mincout:
                         mincout = tempcout
                         cible = cylindres[id_cylindre]
@@ -78,7 +91,8 @@ def algo(roombatest, cylindres, temps):
 def main_algo():
     global collecte
     sommep = 0
-    roombatest = Roomba(0, 0)
+    roombatest = Roomba(24, 15)
+    resultats = []
     cylindres = []
     try:
         x, y, t = lireMap("donnees-map.txt")
@@ -86,17 +100,24 @@ def main_algo():
         x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
     for i in range(len(x)):
         cylindres.append(Cylindre(x[i], y[i], t[i]))
+    #cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
+
     # for cylindre in cylindres:
     #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
         sommep+=cylindres[i].gain
     temps = 300
+    #for j in range(0,20):
+        #cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
     collecte = 0
     chemin = algo(roombatest, cylindres, temps)
     print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
     collecte = 0
-    afficherMap(cylindres, chemin)
+        #resultats.append((collecte/sommep)*100)
+    print(resultats)
+    afficherMap(cylindres, chemin, afficherTousLesIndices=True)
+    
 
 if __name__ == "__main__":
     main_algo()
