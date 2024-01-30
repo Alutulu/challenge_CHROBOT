@@ -57,12 +57,11 @@ def calculeScore(posini, chemin):
 
 def main():
     cylindres = []
-    # x, y, t = lireMap("donnees-map.txt")
-    # for i in range(len(x)):
-    #     cylindres.append(Cylindre(x[i], y[i], t[i]))
-    # for cylindre in cylindres:
-    #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
-    cylindres = genererRandomCylindres()
+    x, y, t = lireMap("donnees-map.txt")
+    for i in range(len(x)):
+        cylindres.append(Cylindre(x[i], y[i], t[i]))
+    # Pour générer une map aléatoire :
+    # cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
     afficherMap(cylindres, styleVirgile=False)
