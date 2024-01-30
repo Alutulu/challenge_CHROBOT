@@ -13,9 +13,11 @@ def afficherMap(listCylindres, styleVirgile = False):
     n = len(x)
     fig = plt.figure(1)
     ax = fig.gca()
+    ax.set_aspect('equal', adjustable='box')
     for i in range(n):
         plt.plot(x[i],y[i],marker='+',color=tColorTab[int(t[i])])
         c1 = plt.Circle((x[i],y[i]), dbRayon,color=tColorTab[int(t[i])] )
+        plt.text(x[i], y[i], "5")
         ax.add_patch(c1)
 
     colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
