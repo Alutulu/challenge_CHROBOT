@@ -68,13 +68,13 @@ def main():
     # cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
-    afficherMap(cylindres, styleVirgile=False)
     n_cylindres = [2, 9, 5, 4, 3, 0]
     chemin = [cylindres[i] for i in n_cylindres] 
     posIni = Cylindre(0, 0, 1)
     dirIni = np.array([0, 1])
     res = planifie(chemin, posIni, dirIni)
     print(res)
+    afficherMap(cylindres, n_cylindres, styleVirgile=False)
 
 if __name__ == "__main__":
     main()
