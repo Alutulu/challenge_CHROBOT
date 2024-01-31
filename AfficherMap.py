@@ -11,7 +11,11 @@ def afficherMap(listCylindres, chemin=None, gain=None, carburant=None, temps=Non
     fig_global, (fig, legende) = plt.subplots(1, 2, gridspec_kw={'width_ratios': [3, 2]})
     fig_global.suptitle("Graphe tournée")
     manager = plt.get_current_fig_manager()
-    manager.window.showMaximized()
+    try:
+      manager.window.showMaximized()
+    except:
+      fig_global.set_figwidth(100)
+      fig_global.set_figheight(100)
     fig.set_aspect('equal')
     for cylindre in listCylindres:
         if chemin != None:
