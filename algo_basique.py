@@ -1,9 +1,11 @@
 import math 
+import numpy as np
 from main import *
 from LireMap import lireMap
 from Cyclindre import *
 from AfficherMap import afficherMap
 from GenererMap import genererRandomCylindres
+from Planifie import calculeAngle 
 
 import numpy as np
 from main import v0, a, distance
@@ -21,6 +23,7 @@ class Roomba:
     self.carburant = carburant
     self.vitesse = vitesse
     self.masse = masse
+    self.direction = np.array([0, 1])
     
     def calculeVitesse(self)  -> float:
         return v0*np.exp(-a*self.masse)
@@ -36,12 +39,16 @@ def collecter(cylindre, roomba):
   roomba.masse += cylindre.masse #Ajout masse
   roomba.carburant -= (100+3*roomba.masse)*distance(cylindre, roomba) #Penalité carburant, j'ai pas la formule donc purement arbitraire 
   collecte += cylindre.gain #Ajout gain
-  temps -= distance(cylindre, roomba)/roomba.vitesse #Décompte du temps avant MAJ vitesse
+  angle = calculeAngle(roomba.direction, roomba, cylindre, degres=False)
+  print("debug angle: ", angle)
+  temps -= (distance(cylindre, roomba)/roomba.vitesse + abs(angle)/(2*roomba.vitesse))#Décompte du temps avant MAJ vitesse
   roomba.vitesse = vitesse(roomba.masse) #MAJ Vitesse avec nouvelle masse
+  roomba.direction = np.array([cylindre.x - roomba.x, cylindre.y - roomba.y])
   roomba.x = cylindre.x #MAJ Position
   roomba.y = cylindre.y 
   print("nouvelle masse = ", roomba.masse," nouveau carburant = ", roomba.carburant," nouveau gain = ", collecte," temps restant = ", temps, "nouvelle vitesse = ", roomba.vitesse, "nouvelle position roomba : ",roomba.x, roomba.y)
   cylindre.isActive = False
+  
 
 def va(cylindre):
     sommeliens = 0
@@ -52,6 +59,7 @@ def va(cylindre):
 def algo(roombatest, cylindres):
     global chemin
     global temps
+    dirIni = np.array([0, 1])
     chemin = []
     while(temps>0 and roombatest.carburant>0): #Tant qu'il reste du temps et du carburant
         if(collecte == 0): #Si c'est la première itération
@@ -121,21 +129,28 @@ def main_algo():
         sommep+=cylindres[i].gain
     temps = 300
     resultats = []
-    for j in range(0,20):
-        Cylindre.last_id = -1
-        cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
-        for i in range(len(cylindres)):
-            cylindres[i].updateConnections(cylindres)
-            sommep+=cylindres[i].gain
-        print("nb cylindres : ", len(cylindres))
-        collecte = 0
-        temps = 300
-        roombatest = Roomba(12.5, 12.5)
-        chemin = algo(roombatest, cylindres)
-        print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
-        resultats.append((collecte/sommep)*100)
-        sommep = 0
-    print(resultats)
+    collecte = 0
+    roombatest = Roomba(0, 0)
+    chemin = algo(roombatest, cylindres)
+    #for j in range(0,20):
+    #    Cylindre.last_id = -1
+    #    cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
+    #    for i in range(len(cylindres)):
+    #        cylindres[i].updateConnections(cylindres)
+    #        sommep+=cylindres[i].gain
+    #    print("nb cylindres : ", len(cylindres))
+    #    collecte = 0
+    #    temps = 300
+    #    roombatest = Roomba(12.5, 12.5)
+    #    chemin = algo(roombatest, cylindres)
+    #    print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
+    #    resultats.append((collecte/sommep)*100)
+    #    sommep = 0
+    #print(resultats)
+    print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
+    chemincyl = [cylindres[i] for i in chemin]
+    res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([0, 1]))
+    simulate_turtle(res, quick=True)
     afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
     
 
