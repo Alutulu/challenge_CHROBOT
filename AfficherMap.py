@@ -96,8 +96,8 @@ def afficherMap(listCylindres, chemin=None, gain=None, carburant=None, temps=Non
     if gain != None:
       legende.text(0.0, 0.3, "Gain final : " + str(gain) + " €", fontsize='xx-large')
     if carburant != None:
-      legende.text(0.0, 0.2, "Carburant restant : " + str(carburant) + " L", fontsize='xx-large')
+      legende.text(0.0, 0.2, "Carburant restant : " + str(round(carburant, 2)) + " L", fontsize='xx-large')
     if temps != None:
-      legende.text(0.0, 0.1, "Temps restant : " + str(temps) + " s", fontsize='xx-large')
+      legende.text(0.0, 0.1, "Temps restant : " + str(round(temps, 2)) + " s", fontsize='xx-large')
 
     plt.show()

@@ -74,7 +74,7 @@ def main():
     dirIni = np.array([0, 1])
     res = planifie(chemin, posIni, dirIni)
     print(res)
-    afficherMap(cylindres, chemin=n_cylindres, gain=28, carburant=10, temps=56, afficherTousLesIndices=False)
+    afficherMap(cylindres, chemin=n_cylindres, gain=28, carburant=10.547899, temps=56.5499, afficherTousLesIndices=False)
 
 if __name__ == "__main__":
     main()
