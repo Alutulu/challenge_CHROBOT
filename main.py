@@ -4,6 +4,7 @@ import numpy as np
 from AfficherMap import afficherMap
 from Planifie import planifie
 from GenererMap import genererRandomCylindres
+from Simu_turtle import simulate_turtle
 
 a = 6.98*10**(-2)
 v0 = 1 
@@ -77,7 +78,7 @@ def main():
     posIni = Cylindre(0, 0, 1)
     dirIni = np.array([0, 1])
     res = planifie(chemin, posIni, dirIni)
-    print(res)
+    simulate_turtle(res, quick=True)
     afficherMap(cylindres, chemin=n_cylindres, gain=28, carburant=10.547899, temps=56.5499, afficherTousLesIndices=False)
 
 if __name__ == "__main__":
