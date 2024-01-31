@@ -2,6 +2,21 @@ from Cyclindre import Cylindre
 from numpy.linalg import norm
 from numpy import sqrt, cos, sin, arctan2, array, degrees, cross, dot
 
+def calculeAngle(direction, robot, cylindre, degres = True): 
+    """Calcule l'angle entre la direction du robot et le prochain cylindre
+       :param vec direction: direction du robot
+       :param Roomba robot: Robot
+       :param Cylindre cylindre: Prochain cylindre
+       :param boolean degres: Retourne en degrés ou en radians
+       """
+    vec = array([cylindre.x-robot.x, cylindre.y-robot.y]) 
+    rad = arctan2(cross(direction, vec), dot(direction, vec))
+    if(degres):
+        deg = degrees(rad)
+        return deg
+    else:
+        return rad
+
 def planifie(chemin, posIni, dirIni, printTxt = False):
     """Planifie le chemin du robot
        :param list chemin: Chemin (liste de Cylindres)

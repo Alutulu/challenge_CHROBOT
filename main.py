@@ -26,6 +26,10 @@ def vitesse(masse):
     #Calcule la vitesse du robot
     return v0*np.exp(-a*masse)
 
+def rotation(masse):
+    #Calcule la vitesse de rotation
+    return 2*vitesse(masse)
+
 def calculeScore(posini, chemin):
     #Calcule le score de chaque chemin
     pos = posini 
