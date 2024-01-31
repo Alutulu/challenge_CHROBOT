@@ -42,6 +42,8 @@ def va(cylindre):
     return sommeliens
 
 def algo(roombatest, cylindres, temps):
+    global chemin
+    chemin = []
     while(temps>0 and roombatest.carburant>0): #Tant qu'il reste du temps et du carburant
         if(collecte == 0): #Si c'est la première itération
             print("debug : collecte = 0")
@@ -91,7 +93,7 @@ def algo(roombatest, cylindres, temps):
 def main_algo():
     global collecte
     sommep = 0
-    roombatest = Roomba(24, 15)
+    roombatest = Roomba(0, 0)
     resultats = []
     cylindres = []
     try:
@@ -108,13 +110,21 @@ def main_algo():
         cylindres[i].updateConnections(cylindres)
         sommep+=cylindres[i].gain
     temps = 300
-    #for j in range(0,20):
-        #cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
-    collecte = 0
-    chemin = algo(roombatest, cylindres, temps)
-    print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
-    collecte = 0
-        #resultats.append((collecte/sommep)*100)
+    resultats = []
+    for j in range(0,20):
+        Cylindre.last_id = -1
+        cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
+        for i in range(len(cylindres)):
+            cylindres[i].updateConnections(cylindres)
+            sommep+=cylindres[i].gain
+        print("nb cylindres : ", len(cylindres))
+        collecte = 0
+        temps = 300
+        roombatest = Roomba(12.5, 12.5)
+        chemin = algo(roombatest, cylindres, temps)
+        print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
+        resultats.append((collecte/sommep)*100)
+        sommep = 0
     print(resultats)
     afficherMap(cylindres, chemin, afficherTousLesIndices=True)
     
