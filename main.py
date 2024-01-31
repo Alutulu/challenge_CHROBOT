@@ -77,9 +77,9 @@ def main():
     chemin = [cylindres[i] for i in n_cylindres] 
     posIni = Cylindre(0, 0, 1)
     dirIni = np.array([0, 1])
-    res = planifie(chemin, posIni, dirIni, printTxt=False)
-    simulate_turtle(res, quick=True)
-    afficherMap(cylindres, chemin=n_cylindres, gain=28, carburant=10.547899, temps=56.5499, afficherTousLesIndices=False)
+    res = planifie(chemin, posIni, dirIni, printTxt=True)
+    #simulate_turtle(res, quick=True)
+    #afficherMap(cylindres, chemin=n_cylindres, gain=28, carburant=10.547899, temps=56.5499, afficherTousLesIndices=False)
 
 if __name__ == "__main__":
     main()

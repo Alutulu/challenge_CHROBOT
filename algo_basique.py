@@ -23,7 +23,7 @@ class Roomba:
     self.carburant = carburant
     self.vitesse = vitesse
     self.masse = masse
-    self.direction = np.array([0, 1])
+    self.direction = np.array([1, 0])
     
     def calculeVitesse(self)  -> float:
         return v0*np.exp(-a*self.masse)
@@ -36,8 +36,9 @@ def collecter(cylindre, roomba):
   global temps
   global sommep
   print("appel collecter()")
+  roomba.carburant -= (100+3*roomba.masse)*distance(cylindre, roomba) * 0.968932
   roomba.masse += cylindre.masse #Ajout masse
-  roomba.carburant -= (100+3*roomba.masse)*distance(cylindre, roomba) #Penalité carburant, j'ai pas la formule donc purement arbitraire 
+   #Penalité carburant, j'ai pas la formule donc purement arbitraire 
   collecte += cylindre.gain #Ajout gain
   angle = calculeAngle(roomba.direction, roomba, cylindre, degres=False)
   print("debug angle: ", angle)
@@ -149,9 +150,9 @@ def main_algo():
     #print(resultats)
     print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
     chemincyl = [cylindres[i] for i in chemin]
-    res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([0, 1]))
-    simulate_turtle(res, quick=True)
-    afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
+    res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([1, 0]), printTxt = True)
+    #simulate_turtle(res, quick=True)
+    #afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
     
 
 if __name__ == "__main__":
