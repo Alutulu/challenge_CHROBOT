@@ -33,13 +33,15 @@ def planifie(chemin, posIni, dirIni, printTxt = False):
         rad = arctan2(cross(direction, vec), dot(direction, vec))
         deg = degrees(rad)
         dist = sqrt((position.x-etape.x)**2 + (position.y-etape.y)**2)
-        primitives.append(f'Turn {deg}')
-        primitives.append(f'Go {dist}')
+        primitives.append(f'TURN {deg}')
+        primitives.append(f'GO {dist}')
         direction = vec  
         position = etape
+    primitives.append('FINISH')
+    primitives.append('STOP')
 
     if(printTxt):
-        with open('instructions.txt', 'w') as file:
+        with open('C:/challenge/script.txt', 'w') as file:
             for ligne in primitives:
                 file.writelines(ligne + '\n')
     else:
