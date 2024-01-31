@@ -41,8 +41,9 @@ def va(cylindre):
         sommeliens += cylindresuiv.gain
     return sommeliens
 
-def algo(roombatest, cylindres, temps):
+def algo(roombatest, cylindres):
     global chemin
+    global temps
     chemin = []
     while(temps>0 and roombatest.carburant>0): #Tant qu'il reste du temps et du carburant
         if(collecte == 0): #Si c'est la première itération
@@ -92,6 +93,7 @@ def algo(roombatest, cylindres, temps):
        
 def main_algo():
     global collecte
+    global temps
     sommep = 0
     roombatest = Roomba(0, 0)
     resultats = []
@@ -121,7 +123,7 @@ def main_algo():
         collecte = 0
         temps = 300
         roombatest = Roomba(12.5, 12.5)
-        chemin = algo(roombatest, cylindres, temps)
+        chemin = algo(roombatest, cylindres)
         print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
         resultats.append((collecte/sommep)*100)
         sommep = 0
