@@ -2,6 +2,22 @@ import math
 
 class Cylindre:
   last_id = -1
+  type_param = {
+    1: {
+      'gain': 1,
+      'masse': 1
+    },
+    2: {
+      'gain': 2,
+      'masse': 2
+    },
+    3: {
+      'gain': 3,
+      'masse': 2
+    }
+  }
+
+
   def __init__(self, x, y, type, rayon = 1):
     self.id = Cylindre.last_id + 1
     Cylindre.last_id += 1
@@ -12,15 +28,8 @@ class Cylindre:
     self.isActive = True
     self.connections = []
     self.type = int(type)
-    if self.type == 1:
-      self.gain = 1
-      self.masse = 1
-    elif self.type == 2:
-      self.gain = 2
-      self.masse = 2
-    else:
-      self.gain = 3
-      self.masse = 2
+    self.gain = Cylindre.type_param[self.type]['gain']
+    self.masse = Cylindre.type_param[self.type]['masse']
 
   def willCollide(self, cylindreDest, cylindreTest):
     # équation droite de départ vers destination
