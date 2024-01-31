@@ -5,6 +5,8 @@ from Cyclindre import *
 from AfficherMap import afficherMap
 from GenererMap import genererRandomCylindres
 
+import numpy as np
+from main import v0, a, distance
 collecte = 0
 temps = 300
 solution = False
@@ -19,6 +21,12 @@ class Roomba:
     self.carburant = carburant
     self.vitesse = vitesse
     self.masse = masse
+    
+    def calculeVitesse(self)  -> float:
+        return v0*np.exp(-a*self.masse)
+    
+    def distanceCylindre(self, cyl) -> float:
+        return distance(self, cyl)
 
 def collecter(cylindre, roomba):
   global collecte
