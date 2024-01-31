@@ -126,7 +126,7 @@ def main_algo():
         resultats.append((collecte/sommep)*100)
         sommep = 0
     print(resultats)
-    afficherMap(cylindres, chemin, afficherTousLesIndices=True)
+    afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
     
 
 if __name__ == "__main__":
