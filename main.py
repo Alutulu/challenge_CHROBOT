@@ -69,17 +69,9 @@ def main():
         x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
     for i in range(len(x)):
         cylindres.append(Cylindre(x[i], y[i], t[i]))
-    # Pour générer une map aléatoire :
-    # cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
-    n_cylindres = [3, 2, 5, 9, 4, 0]
-    chemin = [cylindres[i] for i in n_cylindres] 
-    posIni = Cylindre(0, 0, 1)
-    dirIni = np.array([0, 1])
-    res = planifie(chemin, posIni, dirIni, printTxt=False)
-    simulate_turtle(res, quick=True)
-    afficherMap(cylindres, chemin=n_cylindres, gain=28, carburant=10.547899, temps=56.5499, afficherTousLesIndices=False)
+    
 
 if __name__ == "__main__":
     main()

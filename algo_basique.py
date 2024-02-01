@@ -24,6 +24,8 @@ class Roomba:
     self.vitesse = vitesse
     self.masse = masse
     self.direction = np.array([0, 1])
+    self.temps = temps
+    self.gain = 0
     
     def calculeVitesse(self)  -> float:
         return v0*np.exp(-a*self.masse)
