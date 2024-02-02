@@ -47,7 +47,7 @@ def collecter(cylindre, roomba):
   roomba.direction = np.array([cylindre.x - roomba.x, cylindre.y - roomba.y])
   roomba.x = cylindre.x #MAJ Position
   roomba.y = cylindre.y 
-  print("nouvelle masse = ", roomba.masse," nouveau carburant = ", roomba.carburant," nouveau gain = ", collecte," temps restant = ", temps, "nouvelle vitesse = ", roomba.vitesse, "nouvelle position roomba : ",roomba.x, roomba.y)
+  print("nouvelle masse = ", roomba.masse," nouveau carburant = ", roomba.carburant," nouveau gain = ", round(collecte, 2)," temps restant = ", temps, "nouvelle vitesse = ", roomba.vitesse, "nouvelle position roomba : ",roomba.x, roomba.y)
   cylindre.isActive = False
   
 
@@ -77,8 +77,10 @@ def algo(roombatest, cylindres):
             chemin.append(cible.id)
         else:
             mincout = math.inf
+            isole = True
             for id_cylindre in cible.connections:
                 if cylindres[id_cylindre].isActive:
+                    isole = False
                     #tempsommeliens = -999
                     #sommeliens = va(cylindres[id_cylindre])
                     #if(sommeliens > tempsommeliens):
@@ -91,6 +93,19 @@ def algo(roombatest, cylindres):
                         mincout = tempcout
                         cible = cylindres[id_cylindre]
                         solution = True
+            if isole:
+                id_min = cible.connections[0]
+                mincout = (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[0]])
+                solution = roombatest.carburant > mincout
+                if len(cible.connections) > 1:
+                    for id_cylindre in cible.connections:
+                        tempcout = roombatest.carburant > (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[id_cylindre]])
+                        if roombatest.carburant > tempcout and tempcout < mincout:
+                            mincout = tempcout
+                            id_min = id_cylindre
+                            solution = True
+                if solution:
+                    cible = cylindres[id_min]
             if(solution):
                 if(roombatest.carburant - (100+3*roombatest.masse)*distance(cible, roombatest) > 0):
                     collecter(cible, roombatest)
@@ -105,7 +120,13 @@ def algo(roombatest, cylindres):
         print("Temps écoulé!")
     elif(roombatest.carburant<0):
         print("Plus d'essence!")
-    print("chemin = ", chemin)
+    print("chemin = ", end='')
+    if len(chemin) > 0:
+        print(chemin[0], end='')
+    if len(chemin) > 1:
+        for id in chemin[1:]:
+            print(' -> ' + str(id), end='')
+        print()
     return chemin   
        
 def main_algo():
