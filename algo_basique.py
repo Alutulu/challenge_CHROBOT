@@ -155,44 +155,44 @@ def main_algo():
     roombatest = Roomba(0, 0)
     resultats = []
     cylindres = []
-    # try:
-    #     x, y, t = lireMap("donnees-map.txt")
-    # except:
-    #     x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
-    # for i in range(len(x)):
-    #     cylindres.append(Cylindre(x[i], y[i], t[i]))
+    try:
+        x, y, t = lireMap("donnees-map.txt")
+    except:
+        x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
+    for i in range(len(x)):
+        cylindres.append(Cylindre(x[i], y[i], t[i]))
     #cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3, printTxt=True)
 
-    # for cylindre in cylindres:
-    #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
-    # for i in range(len(cylindres)):
-    #    cylindres[i].updateConnections(cylindres)
-    #    sommep+=cylindres[i].gain
+    for cylindre in cylindres:
+        print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
+    for i in range(len(cylindres)):
+       cylindres[i].updateConnections(cylindres)
+       sommep+=cylindres[i].gain
     temps = 300
     resultats = []
     collecte = 0
-    #roombatest = Roomba(0, 0)
-    #chemin = algo(roombatest, cylindres)
-    for j in range(0,100):
-        print("debug : passe numéro ",j)
-        Cylindre.last_id = -1
-        cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
-        for i in range(len(cylindres)):
-            cylindres[i].updateConnections(cylindres)
-            sommep+=cylindres[i].gain
-        print("nb cylindres : ", len(cylindres))
-        collecte = 0
-        temps = 300
-        roombatest = Roomba(0, 0)
-        chemin = algo(roombatest, cylindres)
-        print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
-        resultats.append((collecte/sommep)*100)
-        sommep = 0
-    # print(resultats)
-    print("------------------------------------------\n \n")
-    print(sum(resultats)/len(resultats))
+    roombatest = Roomba(0, 0)
+    chemin = algo(roombatest, cylindres)
+    # for j in range(0,500):
+    #     print("debug : passe numéro ",j)
+    #     Cylindre.last_id = -1
+    #     cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
+    #     for i in range(len(cylindres)):
+    #         cylindres[i].updateConnections(cylindres)
+    #         sommep+=cylindres[i].gain
+    #     print("nb cylindres : ", len(cylindres))
+    #     collecte = 0
+    #     temps = 300
+    #     roombatest = Roomba(0, 0)
+    #     chemin = algo(roombatest, cylindres)
+    #     print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
+    #     resultats.append((collecte/sommep)*100)
+    #     sommep = 0
+    # # print(resultats)
+    # print("------------------------------------------\n \n")
+    # print(sum(resultats)/len(resultats))
     print("fins dues aux connections : ",exceptionConnexions,"\n fins dues au carburant : ",exceptionCarburant,"\n fins dues au temps : ",exceptionTemps)
-    #print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
+    print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
     chemincyl = [cylindres[i] for i in chemin]
     res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([1, 0]), printTxt = True)
     #simulate_turtle(res, quick=True)
