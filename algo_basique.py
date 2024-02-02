@@ -156,7 +156,7 @@ def main_algo():
     resultats = []
     cylindres = []
     try:
-        x, y, t = lireMap("donnees-map.txt")
+        x, y, t = lireMap("donnees-map-3.txt")
     except:
         x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
     for i in range(len(x)):
@@ -195,8 +195,8 @@ def main_algo():
     print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
     chemincyl = [cylindres[i] for i in chemin]
     res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([1, 0]), printTxt = True)
-    #simulate_turtle(res, quick=True)
-    # afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
+    simulate_turtle(res, quick=True)
+    afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
     
 
 if __name__ == "__main__":

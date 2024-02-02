@@ -44,5 +44,4 @@ def planifie(chemin, posIni, dirIni, printTxt = False):
         with open('C:/challenge/script.txt', 'w') as file:
             for ligne in primitives:
                 file.writelines(ligne + '\n')
-    else:
-        return primitives
+    return primitives

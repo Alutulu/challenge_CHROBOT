@@ -8,13 +8,12 @@ def simulate_turtle(instructions, quick=True):
   else:
      t.speed(10)
   t.setpos(0, 0)
-  t.left(90)
   for instruction in instructions:
-      ordre, valeur = instruction.split()
-      valeur = float(valeur)
-      # print('ordre :', ordre, ' | valeur :', valeur)
-      if ordre == 'Turn':
-        t.left(valeur)
-      elif ordre == 'Go':
-         t.fd(valeur*10)
-         t.dot(10)
+      if len(instruction.split()) > 1:
+        ordre, valeur = instruction.split()
+        valeur = float(valeur)
+        if ordre == 'TURN':
+          t.left(valeur)
+        elif ordre == 'GO':
+          t.fd(valeur*10)
+          t.dot(10)

@@ -35,53 +35,79 @@ def afficherMap(listCylindres, chemin=None, gain=None, carburant=None, temps=Non
           fig.text(cylindre.x+1, cylindre.y-1, str(cylindre.id), fontsize='medium', zorder=5.0, color='b')
           fig.add_patch(c3)
 
-    colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
-    for i in range(len(listCylindres)):
-      cylindreDep = listCylindres[i]
-      color = colors[i%len(colors)]
-      for j in cylindreDep.connections:
-         if j > i:
-            cylindreDest = listCylindres[j]
-            x1, y1, x2, y2 = cylindreDep.x, cylindreDep.y, cylindreDest.x, cylindreDest.y
-            vector = (x2-x1, y2-y1)
-            norm = math.sqrt(vector[0]**2 + vector[1]**2)
-            vector_normalized = (vector[0] / norm, vector[1] / norm)
-            vector_perp = (-vector_normalized[1], vector_normalized[0])
-            new_x1, new_x2, new_y1, new_y2 = cylindreDep.x + vector_normalized[0] * 1.1, cylindreDest.x - vector_normalized[0] * 1.1, cylindreDep.y + vector_normalized[1] * 1.1, cylindreDest.y - vector_normalized[1] * 1.1
-            flecheArrivee = None # True si la fleche est sur le cylindre d'indice j, False si indice i, et None si pas de chemin donné en paramètre
-            if chemin != None:
-              cheminTraverse = False
-              for id in range((len(chemin)-1)):
-                id_cylindre_dep = chemin[id]
-                id_cylindre_dest = chemin[id+1]
-                if id_cylindre_dep == i and id_cylindre_dest == j:
-                    cheminTraverse = True
-                    flecheArrivee = True
-                    break
-                elif id_cylindre_dep == j and id_cylindre_dest == i:
-                   cheminTraverse = True
-                   flecheArrivee = False
-                   break
-              couleurChemin = 'k' if not cheminTraverse else 'r'
-              styleChemin = '--' if not cheminTraverse else '-'
-              sizeChemin = 0.5 if not cheminTraverse else 1.2
-            else:
-               couleurChemin = 'k'
-               styleChemin = '--'
-               sizeChemin = 0.5
-            fig.plot((new_x1, new_x2), (new_y1, new_y2), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
-            if flecheArrivee == True:
-              fig.plot((new_x2, new_x2 + 0.3*(vector_perp[0] - vector_normalized[0])), (new_y2, new_y2 + 0.3*(vector_perp[1] - vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
-              fig.plot((new_x2, new_x2 + 0.3*(-vector_perp[0] - vector_normalized[0])), (new_y2, new_y2 + 0.3*(-vector_perp[1] - vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
-            elif flecheArrivee == False:
-              fig.plot((new_x1, new_x1 + 0.3*(vector_perp[0] + vector_normalized[0])), (new_y1, new_y1 + 0.3*(vector_perp[1] + vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
-              fig.plot((new_x1, new_x1 + 0.3*(-vector_perp[0] + vector_normalized[0])), (new_y1, new_y1 + 0.3*(-vector_perp[1] + vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
-            middle = (x1 + vector[0] / 2, y1 + vector[1] / 2)
-            size_background = 0.4 if len(str(round(norm, 1))) <= 3 else 0.6
-            c1 = plt.Circle((middle[0],middle[1]), size_background,color='w', zorder=2.0)
-            fig.add_patch(c1)
-            offset_x = 0.4 if len(str(round(norm, 1))) <= 3 else 0.65
-            fig.text(middle[0]-offset_x, middle[1]-0.2, str(round(norm, 1)), fontsize='x-small', zorder=3.0, color=couleurChemin)
+    couleurChemin = 'r'
+    styleChemin = '-'
+    sizeChemin = 1.2
+
+    if chemin != None:
+      for i in range(len(chemin) - 1):
+        cylindreDep = listCylindres[chemin[i]]
+        cylindreDest = listCylindres[chemin[i+1]]
+        x1, y1, x2, y2 = cylindreDep.x, cylindreDep.y, cylindreDest.x, cylindreDest.y
+        vector = (x2-x1, y2-y1)
+        norm = math.sqrt(vector[0]**2 + vector[1]**2)
+        vector_normalized = (vector[0] / norm, vector[1] / norm)
+        vector_perp = (-vector_normalized[1], vector_normalized[0])
+        new_x1, new_x2, new_y1, new_y2 = cylindreDep.x + vector_normalized[0] * 1.1, cylindreDest.x - vector_normalized[0] * 1.1, cylindreDep.y + vector_normalized[1] * 1.1, cylindreDest.y - vector_normalized[1] * 1.1
+        fig.plot((new_x1, new_x2), (new_y1, new_y2), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+        fig.plot((new_x2, new_x2 + 0.3*(vector_perp[0] - vector_normalized[0])), (new_y2, new_y2 + 0.3*(vector_perp[1] - vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+        fig.plot((new_x2, new_x2 + 0.3*(-vector_perp[0] - vector_normalized[0])), (new_y2, new_y2 + 0.3*(-vector_perp[1] - vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+        middle = (x1 + vector[0] / 2, y1 + vector[1] / 2)
+        size_background = 0.4 if len(str(round(norm, 1))) <= 3 else 0.6
+        c1 = plt.Circle((middle[0],middle[1]), size_background,color='w', zorder=2.0)
+        fig.add_patch(c1)
+        offset_x = 0.4 if len(str(round(norm, 1))) <= 3 else 0.65
+        fig.text(middle[0]-offset_x, middle[1]-0.2, str(round(norm, 1)), fontsize='x-small', zorder=3.0, color=couleurChemin)
+
+
+
+    # colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
+    # for i in range(len(listCylindres)):
+    #   cylindreDep = listCylindres[i]
+    #   color = colors[i%len(colors)]
+    #   for j in cylindreDep.connections:
+    #      if j > i:
+    #         cylindreDest = listCylindres[j]
+    #         x1, y1, x2, y2 = cylindreDep.x, cylindreDep.y, cylindreDest.x, cylindreDest.y
+    #         vector = (x2-x1, y2-y1)
+    #         norm = math.sqrt(vector[0]**2 + vector[1]**2)
+    #         vector_normalized = (vector[0] / norm, vector[1] / norm)
+    #         vector_perp = (-vector_normalized[1], vector_normalized[0])
+    #         new_x1, new_x2, new_y1, new_y2 = cylindreDep.x + vector_normalized[0] * 1.1, cylindreDest.x - vector_normalized[0] * 1.1, cylindreDep.y + vector_normalized[1] * 1.1, cylindreDest.y - vector_normalized[1] * 1.1
+    #         flecheArrivee = None # True si la fleche est sur le cylindre d'indice j, False si indice i, et None si pas de chemin donné en paramètre
+    #         if chemin != None:
+    #           cheminTraverse = False
+    #           for id in range((len(chemin)-1)):
+    #             id_cylindre_dep = chemin[id]
+    #             id_cylindre_dest = chemin[id+1]
+    #             if id_cylindre_dep == i and id_cylindre_dest == j:
+    #                 cheminTraverse = True
+    #                 flecheArrivee = True
+    #                 break
+    #             elif id_cylindre_dep == j and id_cylindre_dest == i:
+    #                cheminTraverse = True
+    #                flecheArrivee = False
+    #                break
+    #           couleurChemin = 'k' if not cheminTraverse else 'r'
+    #           styleChemin = '--' if not cheminTraverse else '-'
+    #           sizeChemin = 0.5 if not cheminTraverse else 1.2
+    #         else:
+    #            couleurChemin = 'k'
+    #            styleChemin = '--'
+    #            sizeChemin = 0.5
+    #         fig.plot((new_x1, new_x2), (new_y1, new_y2), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+    #         if flecheArrivee == True:
+    #           fig.plot((new_x2, new_x2 + 0.3*(vector_perp[0] - vector_normalized[0])), (new_y2, new_y2 + 0.3*(vector_perp[1] - vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+    #           fig.plot((new_x2, new_x2 + 0.3*(-vector_perp[0] - vector_normalized[0])), (new_y2, new_y2 + 0.3*(-vector_perp[1] - vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+    #         elif flecheArrivee == False:
+    #           fig.plot((new_x1, new_x1 + 0.3*(vector_perp[0] + vector_normalized[0])), (new_y1, new_y1 + 0.3*(vector_perp[1] + vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+    #           fig.plot((new_x1, new_x1 + 0.3*(-vector_perp[0] + vector_normalized[0])), (new_y1, new_y1 + 0.3*(-vector_perp[1] + vector_normalized[1])), color=couleurChemin, linestyle=styleChemin, linewidth=sizeChemin, zorder=1.0)
+    #         middle = (x1 + vector[0] / 2, y1 + vector[1] / 2)
+    #         size_background = 0.4 if len(str(round(norm, 1))) <= 3 else 0.6
+    #         c1 = plt.Circle((middle[0],middle[1]), size_background,color='w', zorder=2.0)
+    #         fig.add_patch(c1)
+    #         offset_x = 0.4 if len(str(round(norm, 1))) <= 3 else 0.65
+    #         fig.text(middle[0]-offset_x, middle[1]-0.2, str(round(norm, 1)), fontsize='x-small', zorder=3.0, color=couleurChemin)
 
     # Légende
     legende.set_aspect('equal')
