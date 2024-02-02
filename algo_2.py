@@ -1,30 +1,55 @@
 import numpy as np
 from main import calculeScore, distance, vitesse, rotation
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, InputLayer
 from tensorflow.keras.models import Sequential
 from Cyclindre import Cylindre
-from planifie import calculeAngle
+from Planifie import calculeAngle
 
 #Paramètres
-output_size = 2
 population_size = 50
+temps = 300
+
+class Roomba:
+    def __init__(self, x, y, rayon = 1, carburant = 10000, vitesse = 1, masse = 1):
+        self.x = x
+        self.y = y
+        self.rayon = rayon
+        self.carburant = carburant
+        self.vitesse = vitesse
+        self.masse = masse
+        self.direction = np.array([1, 0])
+        self.temps = temps
+        self.gain = 0
+
+    def copy(self):
+        #Copie le roomba
+        return Roomba(self.x, self.y, self.rayon, self.carburant, self.vitesse, self.masse)
+    
+    def calculeVitesse(self) -> float:
+        return v0*np.exp(-a*self.masse)
+    
+    def distanceCylindre(self, cyl) -> float:
+        return distance(self, cyl)
 
 def hardmax(prediction):
+    print(f'prediction : {prediction}')
     max_ind = np.argmax(prediction)
-    res = np.zeros_like(predictions)
+    print(max_ind)
+    res = np.zeros_like(prediction)
     res[max_ind] = 1
 
     return max_ind, res
 
 class NeuralNet:
     def __init__(self, input_data, hidden, output_size, robot):
-        model = Sequential()
-        self.input_size = input_data.shape[0]
-        self.robot = np.copy(robot)
-        model.add(Dense(self.input_size, activation='relu', input_shape(self.input_size,)))
+        self.model = Sequential()
+        self.input_size = input_data.shape[1]
+        self.robot = robot.copy()
+        self.model.add(InputLayer(input_shape = (self.input_size, 1)))
         for hidden_size in hidden:
-            model.add(Dense(hidden_size, activation='relu'))
-        model.add(Dense(output_size, activation='softmax'))
+            self.model.add(Dense(hidden_size, activation='relu'))
+        self.model.add(Dense(output_size, activation='linear'))
+        #self.model.summary()
     
     def mutate(self, mutation_rate=0.01):
         #Mute le réseau de neurones
@@ -38,17 +63,20 @@ class NeuralNet:
         data = input_data
         
         while(self.robot.carburant > 0 and self.robot.temps > 0):
+            print(f'data : {data}')
             pred = self.model.predict(data)
+            print(f'prediction : {pred}')
             id_pred, pred = hardmax(pred)
             cylindre = cylindres[id_pred]
             angle = calculeAngle(self.robot.direction, self.robot, cylindre)
             self.robot.temps -= angle/rotation(self.robot.masse)
             self.robot.direction = array([cylindre.x-robot.x, cylindre.y-robot.y]) 
-            dist = distance(self.robot, cylindre)
+            dist = self.robot.calculeDistance(cylindre)
             self.robot.x, self.robot.y = cylindre.x, cylindre.y
             self.robot.temps -= dist/vitesse(self.masse) 
+            self.robot.vitesse = self.robot.calculeVitesse()
             self.robot.gain += cylindre.gain
-            self.robot.masse += cylidnre.masse
+            self.robot.masse += cylindre.masse
             chemin.append(cylindre)
             data = update_data(self.robot, cylindres, chemin)
 
@@ -63,16 +91,17 @@ def crossover(p1, p2):
 
 def update_data(robot, cylindres, explored = []):
     #Renvoie le vecteur data initial (voir pour ajouter du temps)
-    data = []; extra = [robot.x, robot.y, robot.carburant, robot.vitesse, robot.masse, robot.direction, robot.temps]
+    data = []; extra = [robot.x, robot.y, robot.carburant, robot.vitesse, robot.masse, robot.direction[0], robot.direction[1], robot.temps]
     for i, cylindre in enumerate(cylindres):
         if i in explored:
             data.append(-1000)
         else:
             data.append(distance(robot, cylindre))            
     data += extra
-    return np.array(data)
+    data = np.array(data)
+    return data.reshape(1, 28)
 
-def neuroevolution(population_size, input_data, hidden = [64, 32], output_size, robot, n_generations = 10, n_elite = 5):
+def neuroevolution(population_size, input_data, hidden, output_size, robot, n_generations = 10, n_elite = 5):
     #Fonction qui simule la sélection naturelle
     population = [NeuralNet(input_data, hidden, output_size, robot) for _ in range(population_size)]
 
@@ -85,7 +114,7 @@ def neuroevolution(population_size, input_data, hidden = [64, 32], output_size, 
         best_indices = np.argsort(scores)[-n_elite:]
         bests = [population[i] for i in best_indices]
 
-        new_population = bests.copy()
+        new_population = bests[:]
         while len(new_population) < population_size:
             p1 = np.random.choice(bests)
             p2 = np.random.choice(bests)
@@ -97,15 +126,3 @@ def neuroevolution(population_size, input_data, hidden = [64, 32], output_size, 
         population = new_population
     best_network = bests[0]
     return best_network
-
-cylindres = []
-try:
-    x, y, t = lireMap("donnees-map.txt")
-except:
-    x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
-for i in range(len(x)):
-    cylindres.append(Cylindre(x[i], y[i], t[i]))
-
-robot = Roomba(0, 0, masse = 0)
-init_data = update_data(robot, cylindres)
-meilleur = neuroevolution(population_size = 50, data, hidden = [20, 20], len(cylindres), robot, n_generations = 10, n_elite = 5)

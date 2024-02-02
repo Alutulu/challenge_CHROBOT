@@ -4,7 +4,8 @@ import numpy as np
 from AfficherMap import afficherMap
 from Planifie import planifie
 from GenererMap import genererRandomCylindres
-from Simu_turtle import simulate_turtle
+#from Simu_turtle import simulate_turtle
+from algo_2 import *
 
 a = 6.98*10**(-2)
 v0 = 1 
@@ -71,6 +72,10 @@ def main():
         cylindres.append(Cylindre(x[i], y[i], t[i]))
     for i in range(len(cylindres)):
         cylindres[i].updateConnections(cylindres)
+
+    robot = Roomba(0, 0, masse = 0)
+    init_data = update_data(robot, cylindres)
+    meilleur = neuroevolution(50, init_data, [20, 20], len(cylindres), robot, n_generations = 10, n_elite = 5)
     
 
 if __name__ == "__main__":
