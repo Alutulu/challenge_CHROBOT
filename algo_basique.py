@@ -14,6 +14,9 @@ temps = 300
 solution = False
 chemin = []
 sommep = 0
+exceptionConnexions = 0
+exceptionCarburant = 0
+exceptionTemps = 0
 
 class Roomba:
   def __init__(self, x, y, rayon = 1, carburant = 10000, vitesse = 1, masse = 1):
@@ -58,6 +61,9 @@ def va(cylindre):
     return sommeliens
 
 def algo(roombatest, cylindres):
+    global exceptionConnexions
+    global exceptionCarburant
+    global exceptionTemps
     global chemin
     global temps
     dirIni = np.array([0, 1])
@@ -93,33 +99,37 @@ def algo(roombatest, cylindres):
                         mincout = tempcout
                         cible = cylindres[id_cylindre]
                         solution = True
-            if isole:
-                id_min = cible.connections[0]
-                mincout = (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[0]])
-                solution = roombatest.carburant > mincout
-                if len(cible.connections) > 1:
-                    for id_cylindre in cible.connections:
-                        tempcout = roombatest.carburant > (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[id_cylindre]])
-                        if roombatest.carburant > tempcout and tempcout < mincout:
-                            mincout = tempcout
-                            id_min = id_cylindre
-                            solution = True
-                if solution:
-                    cible = cylindres[id_min]
+            # if isole:
+            #     id_min = cible.connections[0]
+            #     mincout = (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[0]])
+            #     solution = roombatest.carburant > mincout
+            #     if len(cible.connections) > 1:
+            #         for id_cylindre in cible.connections:
+            #             tempcout = roombatest.carburant > (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[id_cylindre]])
+            #             if roombatest.carburant > tempcout and tempcout < mincout:
+            #                 mincout = tempcout
+            #                 id_min = id_cylindre
+            #                 solution = True
+                # if solution:
+                #     cible = cylindres[id_min]
             if(solution):
                 if(roombatest.carburant - (100+3*roombatest.masse)*distance(cible, roombatest) > 0):
                     collecter(cible, roombatest)
                     chemin.append(cible.id)
                 else:
+                    exceptionCarburant+=1
                     break
                 solution = False
             else:
+                exceptionConnexions+=1
                 print("plus de solutions!")
                 break   
     if(temps<0):
         print("Temps écoulé!")
+        exceptionTemps+=1
     elif(roombatest.carburant<0):
         print("Plus d'essence!")
+        exceptionCarburant+=1
     print("chemin = ", end='')
     if len(chemin) > 0:
         print(chemin[0], end='')
@@ -130,6 +140,12 @@ def algo(roombatest, cylindres):
     return chemin   
        
 def main_algo():
+    global exceptionConnexions
+    global exceptionCarburant
+    global exceptionTemps
+    exceptionConnexions = 0
+    exceptionCarburant = 0
+    exceptionTemps = 0
     global collecte
     global temps
     sommep = 0
@@ -154,7 +170,7 @@ def main_algo():
     collecte = 0
     #roombatest = Roomba(0, 0)
     #chemin = algo(roombatest, cylindres)
-    for j in range(0,10):
+    for j in range(0,100):
         print("debug : passe numéro ",j)
         Cylindre.last_id = -1
         cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
@@ -172,6 +188,7 @@ def main_algo():
     print(resultats)
     print("------------------------------------------\n \n")
     print(sum(resultats)/len(resultats))
+    print("fins dues aux connections : ",exceptionConnexions,"\n fins dues au carburant : ",exceptionCarburant,"\n fins dues au temps : ",exceptionTemps)
     #print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
     chemincyl = [cylindres[i] for i in chemin]
     res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([1, 0]), printTxt = True)
