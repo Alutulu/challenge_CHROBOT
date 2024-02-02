@@ -1,7 +1,7 @@
 import random
 from Cyclindre import Cylindre
 
-def genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3):
+def genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3, printTxt=True):
   listCylindres = []
   for n in range(nbCylindres):
     spawned = False
@@ -22,4 +22,8 @@ def genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3):
         spawned = True
       else:
         Cylindre.last_id -= 1
+  if(printTxt):
+    with open('C:/challenge/donnees-map.txt', 'w') as file:
+        for cylindre in listCylindres:
+            file.writelines(str(cylindre.x) + ' ' + str(cylindre.y) + ' ' + str(float(cylindre.type)) + '\n')
   return listCylindres

@@ -115,13 +115,13 @@ def main_algo():
     roombatest = Roomba(0, 0)
     resultats = []
     cylindres = []
-    try:
-        x, y, t = lireMap("donnees-map.txt")
-    except:
-        x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
-    for i in range(len(x)):
-        cylindres.append(Cylindre(x[i], y[i], t[i]))
-    #cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3)
+    # try:
+    #     x, y, t = lireMap("donnees-map.txt")
+    # except:
+    #     x, y, t = lireMap("C:/Users/thund/OneDrive/Documents/chrobo/challenge_CHROBOT/donnees-map.txt")
+    # for i in range(len(x)):
+    #     cylindres.append(Cylindre(x[i], y[i], t[i]))
+    cylindres = genererRandomCylindres(nbCylindres=20, xmax=25, ymax=25, min_margin=3, printTxt=True)
 
     # for cylindre in cylindres:
     #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
