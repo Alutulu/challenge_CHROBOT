@@ -31,6 +31,9 @@ class Roomba:
     def distanceCylindre(self, cyl) -> float:
         return distance(self, cyl)
 
+    def calculeCarburant(self, dist) -> float:
+        return (b*self.masse + b0)*dist
+
 def hardmax(prediction):
     print(f'prediction : {prediction}')
     max_ind = np.argmax(prediction)
@@ -75,6 +78,7 @@ class NeuralNet:
             self.robot.x, self.robot.y = cylindre.x, cylindre.y
             self.robot.temps -= dist/vitesse(self.masse) 
             self.robot.vitesse = self.robot.calculeVitesse()
+            self.robot.carburant -= self.robot.calculeCarburant(dist)
             self.robot.gain += cylindre.gain
             self.robot.masse += cylindre.masse
             chemin.append(cylindre)
