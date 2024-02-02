@@ -77,8 +77,10 @@ def algo(roombatest, cylindres):
             chemin.append(cible.id)
         else:
             mincout = math.inf
+            isole = True
             for id_cylindre in cible.connections:
                 if cylindres[id_cylindre].isActive:
+                    isole = False
                     #tempsommeliens = -999
                     #sommeliens = va(cylindres[id_cylindre])
                     #if(sommeliens > tempsommeliens):
@@ -91,6 +93,19 @@ def algo(roombatest, cylindres):
                         mincout = tempcout
                         cible = cylindres[id_cylindre]
                         solution = True
+            if isole:
+                id_min = cible.connections[0]
+                mincout = (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[0]])
+                solution = roombatest.carburant > mincout
+                if len(cible.connections) > 1:
+                    for id_cylindre in cible.connections:
+                        tempcout = roombatest.carburant > (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[id_cylindre]])
+                        if roombatest.carburant > tempcout and tempcout < mincout:
+                            mincout = tempcout
+                            id_min = id_cylindre
+                            solution = True
+                if solution:
+                    cible = cylindres[id_min]
             if(solution):
                 if(roombatest.carburant - (100+3*roombatest.masse)*distance(cible, roombatest) > 0):
                     collecter(cible, roombatest)
