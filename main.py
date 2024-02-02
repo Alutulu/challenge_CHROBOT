@@ -5,7 +5,7 @@ from AfficherMap import afficherMap
 from Planifie import planifie
 from GenererMap import genererRandomCylindres
 #from Simu_turtle import simulate_turtle
-from algo_2 import *
+from algo_3 import *
 
 a = 6.98*10**(-2)
 v0 = 1 
@@ -75,7 +75,7 @@ def main():
 
     robot = Roomba(0, 0, masse = 0)
     init_data = update_data(robot, cylindres)
-    meilleur = neuroevolution(100, init_data, [10], cylindres, robot, n_generations = 15, n_elite = 15)
+    meilleur = neuroevolution_parallel(200, init_data, [20], cylindres, robot, n_generations = 50, n_elite = 15)
     print(f"Meilleur score : {meilleur.score}")
     
 

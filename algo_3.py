@@ -7,7 +7,6 @@ from Planifie import calculeAngle
 import multiprocessing
 
 #Paramètres
-population_size = 50
 temps = 300
 
 class Roomba:
@@ -109,19 +108,24 @@ def update_data(robot, cylindres):
     data = np.array(data)
     return data.reshape(1, len(data))
 
-def neuroevolution(population_size, input_data, hidden, cylindres, robot, n_generations = 10, n_elite = 5):
-    #Fonction qui simule la sélection naturelle
+def evaluate_network(network, input_data, cylindres):
+    return network.evaluate(input_data, cylindres)
+
+def parallel_evaluation(networks, input_data, cylindres):
+    with multiprocessing.Pool() as pool:
+        scores = pool.starmap(evaluate_network, [(network, input_data, cylindres) for network in networks])
+    return scores
+
+def neuroevolution_parallel(population_size, input_data, hidden, cylindres, robot, n_generations=10, n_elite=5):
+    # Fonction qui simule la sélection naturelle
     output_size = len(cylindres)
     population = [NeuralNet(input_data, hidden, output_size, robot) for _ in range(population_size)]
 
     for generation in range(n_generations):
-        scores = []
-        for network in population:
-            score = network.evaluate(input_data, cylindres)
+        scores = parallel_evaluation(population, input_data, cylindres)
+
+        for network, score in zip(population, scores):
             network.score = score
-            scores.append(score)
-            cylindres_explored = [cylindres.index(cyl) for cyl in network.robot.explored]
-            print(f"Robot évalué, score : {score}, carburant restant : {network.robot.carburant}, temps restant : {network.robot.temps}, cylindres explorés : {cylindres_explored}")
 
         best_indices = np.argsort(scores)[-n_elite:]
         bests = [population[i] for i in best_indices]
@@ -138,5 +142,6 @@ def neuroevolution(population_size, input_data, hidden, cylindres, robot, n_gene
             new_population.append(child)
 
         population = new_population
+
     best_network = bests[0]
     return best_network
