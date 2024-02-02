@@ -52,13 +52,18 @@ class Cylindre:
     distance = math.sqrt((x_inter - cylindreTest.x)**2 + (y_inter - cylindreTest.y)**2)
     return distance <= cylindreTest.rayon + self.rayon
   
-  def updateConnections(self, listCylindres):
+  def updateConnections(self, listCylindres, currentCylindre=None):
+    self.connections = []
     for i in range(len(listCylindres)):
+      # if currentCylindre != None:
+      # if not listCylindres[i].isActive:
+      #   flag = False
+      #   break
       if i != self.id:
         flag = True
         for j in range(len(listCylindres)):
           if j != i and j != self.id:
-            if self.willCollide(listCylindres[i], listCylindres[j]):
+            if self.willCollide(listCylindres[i], listCylindres[j]) and listCylindres[j].isActive:
               flag = False
         if flag:
           self.connections.append(i)

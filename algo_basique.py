@@ -83,7 +83,7 @@ def algo(roombatest, cylindres):
             chemin.append(cible.id)
         else:
             mincout = math.inf
-            isole = True
+            # isole = True
             for id_cylindre in cible.connections:
                 if cylindres[id_cylindre].isActive:
                     isole = False
@@ -105,17 +105,20 @@ def algo(roombatest, cylindres):
             #     solution = roombatest.carburant > mincout
             #     if len(cible.connections) > 1:
             #         for id_cylindre in cible.connections:
-            #             tempcout = roombatest.carburant > (100+3*roombatest.masse)*distance(roombatest, cylindres[cible.connections[id_cylindre]])
+            #             tempcout = roombatest.carburant > (100+3*roombatest.masse)*distance(roombatest, cylindres[id_cylindre])
             #             if roombatest.carburant > tempcout and tempcout < mincout:
             #                 mincout = tempcout
             #                 id_min = id_cylindre
             #                 solution = True
-                # if solution:
-                #     cible = cylindres[id_min]
+            #     if solution:
+            #         cible = cylindres[id_min]
+            #         print("bloqué", id_min)
             if(solution):
                 if(roombatest.carburant - (100+3*roombatest.masse)*distance(cible, roombatest) > 0):
                     collecter(cible, roombatest)
                     chemin.append(cible.id)
+                    for i in range(len(cylindres)):
+                        cylindres[i].updateConnections(cylindres)
                 else:
                     exceptionCarburant+=1
                     break
@@ -162,7 +165,7 @@ def main_algo():
 
     # for cylindre in cylindres:
     #     print(cylindre.id, cylindre.x, cylindre.y, cylindre.masse, cylindre.gain)
-    #for i in range(len(cylindres)):
+    # for i in range(len(cylindres)):
     #    cylindres[i].updateConnections(cylindres)
     #    sommep+=cylindres[i].gain
     temps = 300
@@ -185,7 +188,7 @@ def main_algo():
         print("gain = ", collecte,"/",sommep, "soit ",(collecte/sommep)*100,"%")
         resultats.append((collecte/sommep)*100)
         sommep = 0
-    print(resultats)
+    # print(resultats)
     print("------------------------------------------\n \n")
     print(sum(resultats)/len(resultats))
     print("fins dues aux connections : ",exceptionConnexions,"\n fins dues au carburant : ",exceptionCarburant,"\n fins dues au temps : ",exceptionTemps)
@@ -193,7 +196,7 @@ def main_algo():
     chemincyl = [cylindres[i] for i in chemin]
     res = planifie(chemincyl, Cylindre(0, 0, 1), np.array([1, 0]), printTxt = True)
     #simulate_turtle(res, quick=True)
-    #afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
+    # afficherMap(cylindres, chemin, afficherTousLesIndices=False, gain=collecte, carburant=roombatest.carburant, temps=temps)
     
 
 if __name__ == "__main__":
