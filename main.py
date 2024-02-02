@@ -75,7 +75,7 @@ def main():
 
     robot = Roomba(0, 0, masse = 0)
     init_data = update_data(robot, cylindres)
-    meilleur = neuroevolution(20, init_data, [20], cylindres, robot, n_generations = 10, n_elite = 5)
+    meilleur = neuroevolution(100, init_data, [10], cylindres, robot, n_generations = 15, n_elite = 15)
     print(f"Meilleur score : {meilleur.score}")
     
 

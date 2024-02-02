@@ -47,13 +47,14 @@ class NeuralNet:
         self.model = Sequential()
         self.input_size = input_data.shape[1]
         self.robot = robot.copy()
+        self.score = 0
         self.model.add(InputLayer(input_shape = (1, self.input_size)))
         for hidden_size in hidden:
             self.model.add(Dense(hidden_size, activation='relu'))
         self.model.add(Dense(output_size, activation='softmax'))
         #self.model.summary()
     
-    def mutate(self, mutation_rate=0.01):
+    def mutate(self, mutation_rate=0.1):
         # Mute le réseau de neurones
         weights = self.model.get_weights()
         new_weights = [w + mutation_rate * np.random.randn(*w.shape) for w in weights]
@@ -80,7 +81,9 @@ class NeuralNet:
                 self.robot.masse += cylindre.masse
                 data = update_data(self.robot, cylindres)
                 self.robot.explored.append(cylindre)
-            self.robot.temps -= 2
+            else:
+                self.robot.temps -= 50 
+            self.robot.temps -= 1
 
         return self.robot.gain
 
@@ -97,15 +100,13 @@ def crossover(p1, p2):
 
 def update_data(robot, cylindres):
     #Renvoie le vecteur data initial (voir pour ajouter du temps)
-    data = []; extra = [robot.x, robot.y, robot.carburant, robot.vitesse, robot.masse, robot.direction[0], robot.direction[1], robot.temps]
+    data = []; extra = [robot.x, robot.y, robot.carburant, robot.vitesse, robot.masse, robot.direction[0], robot.direction[1], robot.temps]; explored = [int(cyl in robot.explored) for cyl in cylindres]
     for i, cylindre in enumerate(cylindres):
-        if cylindre in robot.explored:
-            data.append(-1000)
-        else:
-            data.append(distance(robot, cylindre))            
+        data.append(distance(robot, cylindre))            
     data += extra
+    data += explored
     data = np.array(data)
-    return data.reshape(1, 28)
+    return data.reshape(1, len(data))
 
 def neuroevolution(population_size, input_data, hidden, cylindres, robot, n_generations = 10, n_elite = 5):
     #Fonction qui simule la sélection naturelle
@@ -116,13 +117,15 @@ def neuroevolution(population_size, input_data, hidden, cylindres, robot, n_gene
         scores = []
         for network in population:
             score = network.evaluate(input_data, cylindres)
+            network.score = score
             scores.append(score)
-            print(f"Robot évalué, score : {score}, carburant restant : {network.robot.carburant}, temps restant : {network.robot.temps}")
+            cylindres_explored = [cylindres.index(cyl) for cyl in network.robot.explored]
+            print(f"Robot évalué, score : {score}, carburant restant : {network.robot.carburant}, temps restant : {network.robot.temps}, cylindres explorés : {cylindres_explored}")
 
         best_indices = np.argsort(scores)[-n_elite:]
         bests = [population[i] for i in best_indices]
         best_scores = [nn.robot.gain for nn in bests]
-        print(f'Génération {generation} : meilleurs scores : {best_scores}')
+        print(f'Génération {generation + 1} : meilleurs scores : {best_scores}')
 
         new_population = bests[:]
         while len(new_population) < population_size:
