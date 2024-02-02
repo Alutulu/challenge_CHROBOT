@@ -47,7 +47,7 @@ def collecter(cylindre, roomba):
   roomba.direction = np.array([cylindre.x - roomba.x, cylindre.y - roomba.y])
   roomba.x = cylindre.x #MAJ Position
   roomba.y = cylindre.y 
-  print("nouvelle masse = ", roomba.masse," nouveau carburant = ", roomba.carburant," nouveau gain = ", collecte," temps restant = ", temps, "nouvelle vitesse = ", roomba.vitesse, "nouvelle position roomba : ",roomba.x, roomba.y)
+  print("nouvelle masse = ", roomba.masse," nouveau carburant = ", roomba.carburant," nouveau gain = ", round(collecte, 2)," temps restant = ", temps, "nouvelle vitesse = ", roomba.vitesse, "nouvelle position roomba : ",roomba.x, roomba.y)
   cylindre.isActive = False
   
 
@@ -105,7 +105,13 @@ def algo(roombatest, cylindres):
         print("Temps écoulé!")
     elif(roombatest.carburant<0):
         print("Plus d'essence!")
-    print("chemin = ", chemin)
+    print("chemin = ", end='')
+    if len(chemin) > 0:
+        print(chemin[0], end='')
+    if len(chemin) > 1:
+        for id in chemin[1:]:
+            print(' -> ' + str(id), end='')
+        print()
     return chemin   
        
 def main_algo():
